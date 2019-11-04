@@ -9,7 +9,7 @@ public class TexttestFixture {
         logger.info("Début du test");
 
         Item[] items = new Item[] {                                                //init items
-                new Item("+5 Dexterity Vest", 10, 20), //
+                new Item("+5 Dexterity Vest", 10, -20), //
                 new Item("Aged Brie", 2, 0), //
                 new Item("Elixir of the Mongoose", 5, 7), //
                 new Item("Sulfuras, Hand of Ragnaros", 0, 80), //
@@ -38,12 +38,15 @@ public class TexttestFixture {
             for (Item item : items) {
                 System.out.println(item);
                 if (item.sellIn < 0){
-                    logger.error("attention : produit périmé !");
+                    logger.error("attention : produit {} périmé (jours de vente restants = 0) !", item.name);
                 }
-                if (item.quality <= 0){
-                    logger.error("attention : produit sans aucune valeur !");
+                if (item.quality < 0){
+                    logger.error("attention : produit {} créé avec qualité négative", item.name);
+                }
+                if (item.quality == 0){
+                    logger.error("attention : produit {} sans aucune valeur (0) !", item.name);
                 } else if (item.quality == 50){
-                    logger.info("qualité maximale atteinte pour ce produit");
+                    logger.info("qualité maximale atteinte pour le produit {} (50)", item.name);
                 }
             }
             System.out.println();
