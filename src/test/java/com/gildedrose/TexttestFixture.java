@@ -37,17 +37,7 @@ public class TexttestFixture {
             System.out.println("name, sellIn, quality");
             for (Item item : items) {
                 System.out.println(item);
-                if (item.sellIn < 0){
-                    logger.error("attention : produit {} périmé (jours de vente restants = 0) !", item.name);
-                }
-                if (item.quality < 0){
-                    logger.error("attention : produit {} créé avec qualité négative", item.name);
-                }
-                if (item.quality == 0){
-                    logger.error("attention : produit {} sans aucune valeur (0) !", item.name);
-                } else if (item.quality == 50){
-                    logger.info("qualité maximale atteinte pour le produit {} (50)", item.name);
-                }
+
             }
             System.out.println();
             app.updateQuality();

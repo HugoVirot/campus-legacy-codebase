@@ -14,8 +14,9 @@ public class GildedRose {
     }
 
     public void updateQuality() {
-
         for (int i = 0; i < items.length; i++) {                  // on parcourt la liste des items
+
+            logger.info("item : nom : {} qualité :  {} jours : {} ", items[i].name, items[i].quality, items[i].sellIn);
             if (!items[i].name.equals("Aged Brie") && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
 //**********************cas général : si l'item n'est pas Aged Brie NI place concert*******************************
                 if (items[i].quality > 0) {                             //si sa qualité est positive
@@ -67,6 +68,17 @@ public class GildedRose {
                         items[i].quality = items[i].quality + 1;                      // sa qualité gagne +1 si inférieure à 50
                     }
                 }
+            }
+            if (items[i].sellIn < 0){
+                logger.error("attention : produit {} périmé (jours de vente restants = 0) !", items[i].name);
+            }
+            if (items[i].quality < 0){
+                logger.error("attention : produit {} créé avec qualité négative", items[i].name);
+            }
+            if (items[i].quality == 0){
+                logger.error("attention : produit {} sans aucune valeur (0) !", items[i].name);
+            } else if (items[i].quality == 50){
+                logger.info("qualité maximale atteinte pour le produit {} (50)", items[i].name);
             }
         }
     }
