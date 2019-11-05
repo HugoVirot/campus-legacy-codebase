@@ -17,7 +17,7 @@ public class GildedRose {
 
             logger.info("Début | item: " + items[i].name + ", sellIn : " + items[i].sellIn + ", quality :  " + items[i].quality);
 
-            String name = emptyNameCheck(items[i].name);              // on stocke les attributs du produit dans des variables au nom plus court
+            String name = items[i].name;              // on stocke les attributs du produit dans des variables au nom plus court
             int sellIn = items[i].sellIn;
             int quality = negativeQualityCheck(items[i].quality);
 
