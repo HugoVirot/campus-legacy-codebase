@@ -91,14 +91,14 @@ public class GildedRose {
 
     public void decreaseQuality(Item item) {   //qualité -1 ou -2 selon jours restants
         if (item.quality > 0) {
-            if (item.sellIn >= 0) {                    // jours restants
+            if (item.sellIn >= 0) {                    // si il reste des jours
                 item.quality -= 1;
-            } else {                                   // date dépassée
-                if (item.quality > 2) {
+            } else {                                   // si la date est dépassée
+                if (item.quality > 2) {                // si on peut soustraire 2, on le fait
                     item.quality -= 2;
-                } else if (item.quality == 1){
+                } else if (item.quality == 1){         // si on peut soustraire 1, on le fait
                     item.quality -= 1;
-                }
+                }                                      // sinon, on ne fait rien
             }
         }
     }
