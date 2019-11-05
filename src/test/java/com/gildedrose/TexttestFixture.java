@@ -24,7 +24,7 @@ public class TexttestFixture {
         int itemsNumber = items.length;
         logger.info("Nombre d'articles en vente : {}", itemsNumber);            // affichage nombre items
 
-        int days = 6;
+        int days = 12;
         if (args.length > 0) {
             days = Integer.parseInt(args[0]) + 1;
         }
@@ -40,7 +40,7 @@ public class TexttestFixture {
             }
             System.out.println();
             app.updateQuality();
+            System.out.println();
         }
     }
-
 }
