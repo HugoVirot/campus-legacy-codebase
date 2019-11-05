@@ -34,6 +34,9 @@ public class GildedRose {
             if (items[i].name.equals("Aged Brie")) {
                 logger.info("il s'agit d'un Aged Brie");
                 increaseQuality(items[i]);
+                if (items[i].sellIn < 0){
+                    increaseQuality(items[i]);
+                }
 
 //**************************************cas du concert****************************************************
 
