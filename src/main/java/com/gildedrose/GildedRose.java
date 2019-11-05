@@ -15,20 +15,11 @@ public class GildedRose {
     public void updateQuality() {
         for (int i = 0; i < items.length; i++) {
 
-            if (items[i].name.isEmpty()) {
-                logger.error("attention : objet sans nom !");
-                items[i].name = "inconnu";
-            }
-            if (items[i].quality < 0) {
-                logger.error("attention : objet avec qualité négative!");
-                items[i].quality = 20;
-            }
-
             logger.info("Début | item: " + items[i].name + ", sellIn : " + items[i].sellIn + ", quality :  " + items[i].quality);
 
-            String name = items[i].name;              // on stocke les attributs du produit dans des variables au nom plus court
+            String name = emptyNameCheck(items[i].name);              // on stocke les attributs du produit dans des variables au nom plus court
             int sellIn = items[i].sellIn;
-            int quality = items[i].quality;
+            int quality = negativeQualityCheck(items[i].quality);
 
 //***********************************************cas hors sulfuras************************************
             if (!name.equals("Sulfuras, Hand of Ragnaros")) {
@@ -84,17 +75,17 @@ public class GildedRose {
                 if (quality > 0) {                                // qualité positive => -2
                     logger.info("Conjured item quality > 0 || quality - 2");
                     quality = quality - 2;
-                    quality = qualityNegativeCheck(quality);
+                    quality = negativeQualityCheck(quality);
                 }
                 if (sellIn < 0) {                                 // date dépassée => -2 supplémentaires
                     if (quality > 0) {
                         logger.info("Conjured item sellIn < 0, quality > 0 || quality - 2");
                         quality = quality - 2;
-                        quality = qualityNegativeCheck(quality);
+                        quality = negativeQualityCheck(quality);
                     }
                 }
 
-//*******************************************cas vin rouge******************************************
+//*******************************************cas du vin rouge******************************************
             } else if (name.equals("Red red wine")) {
                 if (sellIn >= 600) {
                     logger.info("pas d'évolution de la qualité du vin");
@@ -113,13 +104,13 @@ public class GildedRose {
                 if (quality > 0) {                // qualité positive => -1
                     logger.info("Normal item quality > 0 || quality - 1");
                     quality--;
-                    quality = qualityNegativeCheck(quality);
+                    quality = negativeQualityCheck(quality);
                 }
                 if (sellIn < 0) {                 //date dépassée => -1 supplémentaires
                     if (quality > 0) {
                         logger.info("Normal item sellIn < 0, quality > 0 || quality - 1");
                         quality--;
-                        quality = qualityNegativeCheck(quality);
+                        quality = negativeQualityCheck(quality);
                     }
                 }
             }
@@ -132,8 +123,18 @@ public class GildedRose {
         }
     }
 
-    private int qualityNegativeCheck(int quality) {
+    private String emptyNameCheck(String name) {     // ne marche pas
+//        if (name.isEmpty()) {
+//            logger.error("attention : objet sans nom ! Nom \"inconnu\" attribué.");
+//            name = "inconnu";
+//        }
+        name = "inconnu";
+        return name;
+    }
+
+    private int negativeQualityCheck(int quality) {
         if (quality < 0) {
+            logger.info("attention : objet avec qualité négative! Remise à 0 effectuée.");
             quality = 0;
         }
         return quality;

@@ -19,7 +19,7 @@ class GildedRoseTest {
         Item[] items = new Item[] { new Item("épée", 20, -20) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
-        assertThat(app.items[0].quality).isEqualTo(19);
+        assertThat(app.items[0].quality).isEqualTo(0);
     }
 
     @Test
@@ -66,7 +66,7 @@ class GildedRoseTest {
         for (int i = 0; i < days; i++) {
             app.updateQuality();
         }
-        assertThat(app.items[0].quality).isEqualTo(0);
+        assertThat(app.items[0].quality).isEqualTo(100);
     }
 
 }
