@@ -3,104 +3,106 @@ package com.gildedrose;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
-
 public class GildedRose {
-
-    Logger logger = LoggerFactory.getLogger(GildedRose.class);
     Item[] items;
+
+    public static final Logger logger = LoggerFactory.getLogger(GildedRose.class);
 
     public GildedRose(Item[] items) {
         this.items = items;
     }
 
     public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {                  // on parcourt la liste des items
+        for (int i = 0; i < items.length; i++) {
+            logger.info("Début | item: " + items[i].name + ", sellIn : " + items[i].sellIn + ", quality :  " + items[i].quality);
 
-            if (items[i].name.isEmpty()){
-                logger.error("attention : objet sans nom !");
-                items[i].name = "inconnu";
+            int sellIn = items[i].sellIn;
+            int quality = items[i].quality;
+
+            if(!items[i].name.equals("Sulfuras, Hand of Ragnaros")){
+                logger.info("Not sulfuras || sellIn - 1");
+                sellIn--;
             }
-            if (items[i].quality < 0){
-                logger.error("attention : objet avec qualité négative!");
-                items[i].quality = 20;
-            }
 
-            logger.info("item ancien statut : nom : {}, qualité : {}, jours : {} ", items[i].name, items[i].quality, items[i].sellIn);
-            items[i].sellIn -= 1;                           // l'item perd 1 jour de vente
-
-//**************************************cas du brie****************************************************
-
-            if (items[i].name.equals("Aged Brie")) {
-                logger.info("il s'agit d'un Aged Brie");
-                increaseQuality(items[i]);
-                if (items[i].sellIn < 0){
-                    increaseQuality(items[i]);
+            if (items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
+                logger.info("Sulfuras");
+            } else if (items[i].name.equals("Aged Brie")) {
+                if (quality < 50) {
+                    if (sellIn < 0) {
+                        logger.info("Aged brie, quality < 50, sellIn < 0 || quality + 2");
+                        quality = quality + 2;
+                    } else {
+                        logger.info("Aged brie, quality < 50, sellIn > 0 || quality + 1");
+                        quality++;
+                    }
                 }
-
-//**************************************cas du concert****************************************************
-
             } else if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                logger.info("il s'agit d'un concert");
-                increaseQuality(items[i]);  // dans tous les cas : qualité +1
 
-                if (items[i].sellIn < 11) {         // concert avec 10 jours ou moins restants
-                    increaseQuality(items[i]);
-                }
-                if (items[i].sellIn < 6) {          // concert avec 5 jours ou moins (rentre dans les deux cas : deux fois +1)
-                    increaseQuality(items[i]);
-                }
-                if (items[i].sellIn < 0) {              // si date dépassée => qualité passe à 0
-                    items[i].quality = 0;
-                }
-            }
-
-//**************************************cas du sulfuras****************************************************
-
-            else if (items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                logger.info("il s'agit d'un sulfuras");
-                items[i].sellIn += 1;                           // l'item gagne 1 jour de vente (annulation jour perdu)
-                System.out.println("le sulfuras ne s'altère jamais");
-            }
-
-//*********************************cas des produits conjured + autres cas****************************************************
-
-            else {
-                decreaseQuality(items[i]);                                    // tous les cas : q -1 ou -2 selon jrs restants
-                if (items[i].name.matches("(.*)Conjured(.*)")) {           //si produit avec conjured dans nom : idem
-                    logger.info("Il s'agit d'un produit Conjured");
-                    decreaseQuality(items[i]);
+                if (sellIn <= 0) {
+                    logger.info("Backstage sellIn <= 0 || quality = 1");
+                    quality = 0;
                 } else {
-                    logger.info("il s'agit d'un produit normal, hors produits spéciaux");
+                    if (items[i].sellIn < 11) {
+                        if (quality < 50) {
+                            logger.info("Backstage sellIn < 11, quality < 50 || quality + 2");
+                            quality = quality + 2;
+                        }
+                    }
+                    if (items[i].sellIn < 6) {
+                        if (quality < 50) {
+                            logger.info("Backstage sellIn < 6, quality < 50 || quality + 3");
+                            quality ++;
+                        }
+                    }
+                    if (items[i].sellIn > 10) {
+                        if (quality < 50) {
+                            logger.info("Backstage sellIn < 6, quality < 50 || quality + 3");
+                            quality ++;
+                        }
+                    }
+                }
+            } else if (items[i].name.startsWith("Conjured")) {
+                if (quality > 0) {
+                    logger.info("Conjured item quality > 0 || quality - 2");
+                    quality = quality - 2;
+                    quality = qualityNegativeCheck(quality);
+                }
+                if (sellIn < 0) {
+                    if (quality > 0) {
+                        logger.info("Conjured item sellIn < 0, quality > 0 || quality - 2");
+                        quality = quality - 2;
+                        quality = qualityNegativeCheck(quality);
+                    }
+                }
+            } else {
+                if (quality > 0) {
+                    logger.info("Normal item quality > 0 || quality - 1");
+                    quality--;
+                    quality = qualityNegativeCheck(quality);
+                }
+                if (sellIn < 0) {
+                    if (quality > 0) {
+                        logger.info("Normal item sellIn < 0, quality > 0 || quality - 1");
+                        quality--;
+                        quality = qualityNegativeCheck(quality);
+                    }
                 }
             }
-        logger.info("item nouveau statut : nom : {}, qualité : {}, jours : {} ", items[i].name, items[i].quality, items[i].sellIn);
-            System.out.println();
+            items[i].sellIn = sellIn;
+            items[i].quality = quality;
+
+            logger.info("Fin | item: " + items[i].name + ", sellIn : " + items[i].sellIn + ", quality :  " + items[i].quality);
         }
+    }
+
+    private int qualityNegativeCheck(int quality) {
+        if(quality<0){
+            quality = 0;
+        }
+        return quality;
     }
 
     public Item[] getItems() {
         return items;
     }
-
-    public void increaseQuality(Item item) {    // sa qualité gagne +1 si inférieure à 50
-        if (item.quality < 50) {
-            item.quality += 1;
-        }
-    }
-
-    public void decreaseQuality(Item item) {   //qualité -1 ou -2 selon jours restants
-        if (item.quality > 0) {
-            if (item.sellIn >= 0) {                    // jours restants
-                item.quality -= 1;
-            } else {                                   // date dépassée
-                if (item.quality > 2) {
-                    item.quality -= 2;
-                } else if (item.quality == 1){
-                    item.quality -= 1;
-                }
-            }
-        }
-    }
 }
-
