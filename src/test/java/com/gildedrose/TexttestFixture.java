@@ -32,7 +32,7 @@ public class TexttestFixture {
         logger.info("Nombre de jours simulés : {}", days);                     // affichage nombre jours
         System.out.println();
 
-        for (int i = 0; i > -(days); i--) {                                       //boucle simulation
+        for (int i = 0; i < days; i++) {                                       //boucle simulation
             System.out.println("-------- day " + i + " --------");
             System.out.println("name, sellIn, quality");
             for (Item item : items) {
