@@ -38,8 +38,10 @@ public class GildedRose {
                 case "Aged Brie":
                     if (sellIn >= 0) {
                         quality++;
+                        quality = qualityCheck(quality, name);
                     } else {
                         quality += 2;
+                        quality = qualityCheck(quality, name);
                     }
                     break;
                 case "Sulfuras, Hand of Ragnaros":
