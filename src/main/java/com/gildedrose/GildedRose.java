@@ -25,7 +25,7 @@ public class GildedRose {
                 sellIn--;
             }
 
-            if (name.matches("(.*)Conjured(.*)")) {
+            if (name.startsWith("Conjured")) {
                 logger.info("Il s'agit d'un produit Conjured");
                 if (sellIn >= 0) {
                     quality -= 2;
