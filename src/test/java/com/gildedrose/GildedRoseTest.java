@@ -53,7 +53,7 @@ class GildedRoseTest {
         Item[] items = new Item[]{new Item("épée",3,70)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
-        assertThat(app.items[0].quality).isEqualTo(49);
+        assertThat(app.items[0].quality).isEqualTo(50);
     }
 
     @Test
@@ -87,14 +87,63 @@ class GildedRoseTest {
     }
 
     @Test
-    void testWineQuality(){
-        Item[] items = new Item[] { new Item("Red red wine", 700,100) };
+    void testWineQuality50(){
+        Item[] items = new Item[] { new Item("Red red wine", 600,50) };
         GildedRose app = new GildedRose(items);
-        int days = 1000;
+        int days = 50;
         for (int i = 0; i < days; i++) {
             app.updateQuality();
         }
         assertThat(app.items[0].quality).isEqualTo(100);
+        assertThat(app.items[0].sellIn).isEqualTo(550);
+    }
+
+    @Test
+    void testWineQuality300(){
+        Item[] items = new Item[] { new Item("Red red wine", 600,50) };
+        GildedRose app = new GildedRose(items);
+        int days = 300;
+        for (int i = 0; i < days; i++) {
+            app.updateQuality();
+        }
+        assertThat(app.items[0].quality).isEqualTo(350);
+        assertThat(app.items[0].sellIn).isEqualTo(300);
+    }
+
+    @Test
+    void testWineQuality600(){
+        Item[] items = new Item[] { new Item("Red red wine", 600,50) };
+        GildedRose app = new GildedRose(items);
+        int days = 600;
+        for (int i = 0; i < days; i++) {
+            app.updateQuality();
+        }
+        assertThat(app.items[0].quality).isEqualTo(350);
+        assertThat(app.items[0].sellIn).isEqualTo(0);
+    }
+
+    @Test
+    void testWineQuality601(){
+        Item[] items = new Item[] { new Item("Red red wine", 600,50) };
+        GildedRose app = new GildedRose(items);
+        int days = 601;
+        for (int i = 0; i < days; i++) {
+            app.updateQuality();
+        }
+        assertThat(app.items[0].quality).isEqualTo(349);
+        assertThat(app.items[0].sellIn).isEqualTo(-1);
+    }
+
+    @Test
+    void testWineQuality700(){
+        Item[] items = new Item[] { new Item("Red red wine", 600,50) };
+        GildedRose app = new GildedRose(items);
+        int days = 700;
+        for (int i = 0; i < days; i++) {
+            app.updateQuality();
+        }
+        assertThat(app.items[0].quality).isEqualTo(250);
+        assertThat(app.items[0].sellIn).isEqualTo(-100);
     }
 
     @Test
