@@ -89,51 +89,6 @@ public class GildedRose {
                         }
                     }
             }
-
-
-//            if (name.equals("Aged Brie")){
-//                if (sellIn >= 0){
-//                    quality++;
-//                } else {
-//                    quality += 2;
-//                }
-//            }
-
-//            if (name.equals("Sulfuras, Hand of Ragnaros")){
-//                logger.info("Le Sulfuras ne se dégrade jamais");
-//            }
-
-
-//            if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-//                logger.info("il s'agit d'un concert");
-//                quality = increaseQuality(quality);
-//
-//                if (sellIn < 11) {
-//                    quality = increaseQuality(quality);
-//                }
-//                if (sellIn < 6) {
-//                    quality = increaseQuality(quality);
-//                }
-//                if (sellIn < 0) {
-//                    quality = 0;
-//                    logger.info("La date du concert est dépassée la qualité est remise à 0");
-//                }
-//            }
-
-//            if (name.equals("Red red wine")) {
-//                if (sellIn >= 600) {
-//                    logger.info("pas d'évolution de la qualité du vin");
-//                } else if (sellIn < 600 && sellIn >= 300) {
-//                    quality++;
-//                    logger.info("le vin se bonifie d'un point: sa valeur est maintenant de {} !", quality);
-//                } else if (sellIn < 300 && sellIn >= 0) {
-//                    logger.info("pas d'évolution de la qualité du vin");
-//                } else {
-//                    quality--;
-//                    logger.info("le vin se dégrade d'un point: sa valeur est maintenant de {} !", quality);
-//                }
-//            }
-
             items[i].sellIn = sellIn;
             items[i].quality = quality;
 
