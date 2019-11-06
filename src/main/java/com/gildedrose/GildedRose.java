@@ -29,8 +29,11 @@ public class GildedRose {
                 logger.info("Il s'agit d'un produit Conjured");
                 if (sellIn >= 0) {
                     quality -= 2;
+                    quality = qualityCheck(quality, name);
+
                 } else {
                     quality -= 4;
+                    quality = qualityCheck(quality, name);
                 }
             }
 
