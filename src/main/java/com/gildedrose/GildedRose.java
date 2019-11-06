@@ -17,125 +17,146 @@ public class GildedRose {
 
             logger.info("Début | item: " + items[i].name + ", sellIn : " + items[i].sellIn + ", quality :  " + items[i].quality);
 
-            String name = items[i].name;              // on stocke les attributs du produit dans des variables au nom plus court
+            String name = items[i].name;
             int sellIn = items[i].sellIn;
-            int quality = negativeQualityCheck(items[i].quality);
+            int quality = qualityCheck(items[i].quality, name);
 
-//***********************************************cas hors sulfuras************************************
             if (!name.equals("Sulfuras, Hand of Ragnaros")) {
-                logger.info("Not sulfuras || sellIn - 1");
                 sellIn--;
             }
 
-//***********************************************cas sulfuras************************************
-            if (name.equals("Sulfuras, Hand of Ragnaros")) {
-                logger.info("Sulfuras");
-
-//***********************************************cas brie************************************
-            } else if (name.equals("Aged Brie")) {
-                if (quality < 50) {
-                    if (sellIn < 0) {
-                        logger.info("Aged brie, quality < 50, sellIn < 0 || quality + 2");
-                        quality = quality + 2;
-                    } else {
-                        logger.info("Aged brie, quality < 50, sellIn > 0 || quality + 1");
-                        quality++;
-                    }
-                }
-
-//***********************************************cas concert************************************
-            } else if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-
-                if (sellIn <= 0) {                             // date passée => qualité passe à 0
-                    logger.info("Backstage sellIn <= 0 || quality = 0");
-                    quality = 0;
+            if (name.matches("(.*)Conjured(.*)")) {
+                logger.info("Il s'agit d'un produit Conjured");
+                if (sellIn >= 0) {
+                    quality -= 2;
                 } else {
-                    if (sellIn < 11) {                        // moins de 11j restants => qualité +2
-                        if (quality < 50) {
-                            logger.info("Backstage sellIn < 11, quality < 50 || quality + 2");
-                            quality = quality + 2;
-                        }
-                    }
-                    if (sellIn < 6) {                        // moins de 6j restants => qualité +3 (+1 supp)
-                        if (quality < 50) {
-                            logger.info("Backstage sellIn < 6, quality < 50 || quality + 3");
-                            quality++;
-                        }
-                    }
-                    if (sellIn > 10) {
-                        if (quality < 50) {
-                            logger.info("Backstage sellIn < 6, quality < 50 || quality + 1");
-                            quality++;
-                        }
-                    }
-                }
-
-//*******************************************cas Conjured******************************************
-            } else if (name.startsWith("Conjured")) {
-                if (quality > 0) {                                // qualité positive => -2
-                    logger.info("Conjured item quality > 0 || quality - 2");
-                    quality = quality - 2;
-                    quality = negativeQualityCheck(quality);
-                }
-                if (sellIn < 0) {                                 // date dépassée => -2 supplémentaires
-                    if (quality > 0) {
-                        logger.info("Conjured item sellIn < 0, quality > 0 || quality - 2");
-                        quality = quality - 2;
-                        quality = negativeQualityCheck(quality);
-                    }
-                }
-
-//*******************************************cas du vin rouge******************************************
-            } else if (name.equals("Red red wine")) {
-                if (sellIn >= 600) {
-                    logger.info("pas d'évolution de la qualité du vin");
-                } else if (sellIn < 600 && sellIn >= 300) {
-                    quality++;
-                    logger.info("le vin se bonifie d'un point: sa valeur est maintenant de {} !", quality);
-                } else if (sellIn < 300 && sellIn >= 0) {
-                    logger.info("pas d'évolution de la qualité du vin");
-                } else {
-                    quality--;
-                    logger.info("le vin se dégrade d'un point: sa valeur est maintenant de {} !", quality);
-                }
-
-//*******************************************tous les autres cas******************************************
-            } else {
-                if (quality > 0) {                // qualité positive => -1
-                    logger.info("Normal item quality > 0 || quality - 1");
-                    quality--;
-                    quality = negativeQualityCheck(quality);
-                }
-                if (sellIn < 0) {                 //date dépassée => -1 supplémentaires
-                    if (quality > 0) {
-                        logger.info("Normal item sellIn < 0, quality > 0 || quality - 1");
-                        quality--;
-                        quality = negativeQualityCheck(quality);
-                    }
+                    quality -= 4;
                 }
             }
+
+            switch (name) {
+                case "Aged Brie":
+                    if (sellIn >= 0) {
+                        quality++;
+                    } else {
+                        quality += 2;
+                    }
+                    break;
+                case "Sulfuras, Hand of Ragnaros":
+                    logger.info("Le Sulfuras ne se dégrade jamais");
+                    break;
+                case "Backstage passes to a TAFKAL80ETC concert":
+                    logger.info("il s'agit d'un concert");
+                    quality = increaseQuality(quality);
+
+                    if (sellIn < 11) {
+                        quality = increaseQuality(quality);
+                    }
+                    if (sellIn < 6) {
+                        quality = increaseQuality(quality);
+                    }
+                    if (sellIn < 0) {
+                        quality = 0;
+                        logger.info("La date du concert est dépassée la qualité est remise à 0");
+                    }
+                    break;
+                case "Red red wine":
+                    if (sellIn >= 600) {
+                        logger.info("pas d'évolution de la qualité du vin");
+                    } else if (sellIn < 600 && sellIn >= 300) {
+                        quality++;
+                        logger.info("le vin se bonifie d'un point: sa valeur est maintenant de {} !", quality);
+                    } else if (sellIn < 300 && sellIn >= 0) {
+                        logger.info("pas d'évolution de la qualité du vin");
+                    } else {
+                        quality--;
+                        logger.info("le vin se dégrade d'un point: sa valeur est maintenant de {} !", quality);
+                    }
+                    break;
+                default:
+                    if (!name.matches("(.*)Conjured(.*)")) {
+                        if (quality > 0) {
+                            logger.info("Normal item quality > 0 || quality - 1");
+                            quality--;
+                            quality = qualityCheck(quality, name);
+                        }
+                        if (sellIn < 0) {
+                            if (quality > 0) {
+                                logger.info("Normal item sellIn < 0, quality > 0 || quality - 1");
+                                quality--;
+                                quality = qualityCheck(quality, name);
+                            }
+                        }
+                    }
+            }
+
+
+//            if (name.equals("Aged Brie")){
+//                if (sellIn >= 0){
+//                    quality++;
+//                } else {
+//                    quality += 2;
+//                }
+//            }
+
+//            if (name.equals("Sulfuras, Hand of Ragnaros")){
+//                logger.info("Le Sulfuras ne se dégrade jamais");
+//            }
+
+
+//            if (name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+//                logger.info("il s'agit d'un concert");
+//                quality = increaseQuality(quality);
+//
+//                if (sellIn < 11) {
+//                    quality = increaseQuality(quality);
+//                }
+//                if (sellIn < 6) {
+//                    quality = increaseQuality(quality);
+//                }
+//                if (sellIn < 0) {
+//                    quality = 0;
+//                    logger.info("La date du concert est dépassée la qualité est remise à 0");
+//                }
+//            }
+
+//            if (name.equals("Red red wine")) {
+//                if (sellIn >= 600) {
+//                    logger.info("pas d'évolution de la qualité du vin");
+//                } else if (sellIn < 600 && sellIn >= 300) {
+//                    quality++;
+//                    logger.info("le vin se bonifie d'un point: sa valeur est maintenant de {} !", quality);
+//                } else if (sellIn < 300 && sellIn >= 0) {
+//                    logger.info("pas d'évolution de la qualité du vin");
+//                } else {
+//                    quality--;
+//                    logger.info("le vin se dégrade d'un point: sa valeur est maintenant de {} !", quality);
+//                }
+//            }
 
             items[i].sellIn = sellIn;
             items[i].quality = quality;
 
             logger.info("Fin | item: " + items[i].name + ", sellIn : " + items[i].sellIn + ", quality :  " + items[i].quality);
-            System.out.println();
         }
+
     }
 
-    private String emptyNameCheck(String name) {     // ne marche pas
-//        if (name.isEmpty()) {
-//            logger.error("attention : objet sans nom ! Nom \"inconnu\" attribué.");
-//            name = "inconnu";
-//        }
-        name = "inconnu";
-        return name;
-    }
-
-    private int negativeQualityCheck(int quality) {
+    private int qualityCheck(int quality, String name) {
         if (quality < 0) {
             logger.info("attention : objet avec qualité négative! Remise à 0 effectuée.");
             quality = 0;
+        }
+        if (quality > 50 && !name.equals("Sulfuras, Hand of Ragnaros") && !name.equals("Red red wine")) {
+            logger.info("attention : objet avec qualité supérieure à 50 ! Remise à 50 effectuée.");
+            quality = 50;
+        }
+        return quality;
+    }
+
+    private int increaseQuality(int quality) {
+        if (quality < 50) {
+            quality += 1;
         }
         return quality;
     }
