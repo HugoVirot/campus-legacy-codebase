@@ -76,7 +76,7 @@ public class GildedRose {
                     }
                     break;
                 default:
-                    if (!name.matches("(.*)Conjured(.*)")) {
+                    if (!name.startsWith("Conjured")) {
                         if (quality > 0) {
                             logger.info("Normal item quality > 0 || quality - 1");
                             quality--;
