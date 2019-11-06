@@ -74,9 +74,12 @@ public class GildedRose {
                     } else if (sellIn < 300 && sellIn >= 0) {
                         logger.info("pas d'évolution de la qualité du vin");
                     } else {
-                        quality--;
-                        quality = qualityCheck(quality, name);
-                        logger.info("le vin se dégrade d'un point: sa valeur est maintenant de {} !", quality);
+                        if (quality > 0) {
+                            quality--;
+                            logger.info("le vin se dégrade d'un point: sa valeur est maintenant de {} !", quality);
+                        } else {
+                            logger.info("qualité à 0 : ne peut pas descendre");
+                        }
                     }
                     break;
                 default:
